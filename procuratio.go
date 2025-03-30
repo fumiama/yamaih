@@ -10,16 +10,18 @@ import (
 )
 
 func (g *Gemini) handler(w http.ResponseWriter, r *http.Request) {
+	extractIP(r)
 	if len(r.URL.Path) <= 1 {
+		fmt.Println("[ERR]", r.RemoteAddr, "400 Invalid Path", r.URL.String())
 		http.Error(w, "400 Invalid Path", http.StatusBadRequest)
 		return
 	}
 	k := r.URL.Query().Get("key")
 	if k == "" {
+		fmt.Println("[ERR]", r.RemoteAddr, "400 Empty API Key", r.URL.String())
 		http.Error(w, "400 Empty API Key", http.StatusBadRequest)
 		return
 	}
-	extractIP(r)
 	v := &Visit{
 		UserKey: k,
 		Time:    time.Now().UnixMilli(),
