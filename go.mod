@@ -1,6 +1,6 @@
 module github.com/fumiama/yamaih
 
-go 1.24.1
+go 1.18
 
 require github.com/FloatTech/sqlite v1.7.2
 
