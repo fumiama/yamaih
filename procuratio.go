@@ -75,7 +75,8 @@ func (g *Gemini) handler(w http.ResponseWriter, r *http.Request) {
 	v.Code = resp.StatusCode
 	h := w.Header()
 	for k, vs := range resp.Header {
-		if len(vs) == 0 {
+		lk := strings.ToLower(k)
+		if len(vs) == 0 || strings.HasPrefix(lk, "x-") {
 			continue
 		}
 		h.Set(k, vs[0])
