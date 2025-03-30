@@ -96,17 +96,13 @@ func (g *Gemini) handler(w http.ResponseWriter, r *http.Request) {
 // extractIP parse real IP addr to r.RemoteAddr from proxy
 func extractIP(r *http.Request) {
 	raddr := r.RemoteAddr
-	if strings.Contains(raddr, "127.0.0.1") ||
-		strings.Contains(raddr, "localhost") ||
-		strings.Contains(raddr, "@") {
-		realr := r.Header.Get("X-Forwarded-For")
+	realr := r.Header.Get("X-Forwarded-For")
+	if len(realr) > 0 && !strings.Contains(realr, "@") {
+		raddr = realr
+	} else {
+		realr = r.Header.Get("X-Real-IP")
 		if len(realr) > 0 && !strings.Contains(realr, "@") {
 			raddr = realr
-		} else {
-			realr = r.Header.Get("X-Real-IP")
-			if len(realr) > 0 && !strings.Contains(realr, "@") {
-				raddr = realr
-			}
 		}
 	}
 	r.RemoteAddr = raddr
